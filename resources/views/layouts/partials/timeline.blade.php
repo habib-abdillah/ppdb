@@ -99,7 +99,7 @@
         </div>
 
         <div class="text-center mt-16">
-            <a href="{{ route('registrasi.index') }}"
+            <a href="{{ route('register') }}"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-full inline-block transition duration-300 transform hover:scale-105 shadow-lg">
                 <span class="block mb-1 text-sm">Daftar Sekarang</span>
                 <span class="block text-xl">PPDB 2024/2025</span>

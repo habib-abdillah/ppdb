@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RegistrasiController;
+use App\Http\Controllers\RegisterController;
 
 // Landing Page (halaman awal sebelum login)
 Route::get('/', fn() => view('landing.index'))->name('landing');
@@ -27,4 +27,5 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/siswa', fn() => view('dashboard.siswa'));
 });
 
-Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi.index');
+Route::get('/register', [RegisterController::class, 'show'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
