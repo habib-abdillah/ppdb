@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\Pendaftar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\AkunPendaftaranMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class RegisterController extends Controller
 {
@@ -47,6 +50,17 @@ class RegisterController extends Controller
             'password' => Hash::make($permintaan->no_hp_orang_tua),
             'role'     => 'siswa',
         ]);
+
+        try {
+            // Kirim email dengan informasi login
+            Mail::to($permintaan->email)->queue(new AkunPendaftaranMail(
+                $permintaan->nama_lengkap,
+                $permintaan->email,
+                $permintaan->no_hp_orang_tua
+            ));
+        } catch (\Exception $e) {
+            Log::error("Gagal mengirim email ke {$permintaan->email}: " . $e->getMessage());
+        }
 
         // Simpan data ke tabel pendaftar
         Pendaftar::create([

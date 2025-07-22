@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             'name' => 'Siswa Baru',
             'email' => 'siswa@example.com',
             'password' => Hash::make('123'),
-            'role' => 'calon_siswa',
+            'role' => 'siswa',
         ]);
     }
 }
