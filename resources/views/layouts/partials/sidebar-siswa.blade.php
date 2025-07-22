@@ -15,21 +15,24 @@
 
         <!-- Navigasi -->
         <nav class="space-y-2">
-            <a href="/siswa" @click="openSidebar = false"
-                class="flex items-center gap-3 text-gray-700 hover:text-blue-600 px-2 py-1 rounded hover:bg-gray-100">
-                <i class="fas fa-home w-5"></i>
-                <span x-show="!isSidebarCollapsed">Beranda</span>
-            </a>
+            <div>
+                <a href="/siswa" @click="openSidebar = false"
+                    class="flex items-center gap-3 text-gray-700 hover:text-blue-600 px-2 py-1 rounded hover:bg-gray-100">
+                    <i class="fas fa-home w-5"></i>
+                    <span x-show="!isSidebarCollapsed">Beranda</span>
+                </a>
+            </div>
 
             <!-- Pembayaran -->
             <div>
                 <button onclick="toggleSubmenu('pembayaran-submenu')"
                     class="flex items-center justify-between w-full text-gray-700 font-medium hover:text-blue-600 hover:bg-gray-100 rounded px-2 py-1">
                     <div class="flex items-center">
-                        <i class="fas fa-money-check w-5 ms-3"></i>
+                        <i class="fas fa-money-check w-5"></i>
                         <span x-show="!isSidebarCollapsed" class="ms-3">Pembayaran</span>
                     </div>
-                    <i class="fas fa-chevron-down transition-transform duration-300" id="icon-pembayaran-submenu"></i>
+                    <i x-show="!isSidebarCollapsed" class="fas fa-chevron-down transition-transform duration-300"
+                        id="icon-pembayaran-submenu"></i>
                 </button>
                 <ul id="pembayaran-submenu" class="mt-2 ml-8 space-y-1 hidden">
                     <li><a href="/siswa/pembayaran/tpa" @click="openSidebar = false"
@@ -46,10 +49,11 @@
                 <button onclick="toggleSubmenu('tpa-submenu')"
                     class="flex items-center justify-between w-full text-gray-700 font-medium hover:text-blue-600 hover:bg-gray-100 rounded px-2 py-1">
                     <div class="flex items-center">
-                        <i class="fas fa-file-alt w-5 ms-3"></i>
+                        <i class="fas fa-file-alt w-5"></i>
                         <span x-show="!isSidebarCollapsed" class="ms-3">TPA</span>
                     </div>
-                    <i class="fas fa-chevron-down transition-transform duration-300" id="icon-tpa-submenu"></i>
+                    <i x-show="!isSidebarCollapsed" class="fas fa-chevron-down transition-transform duration-300"
+                        id="icon-tpa-submenu"></i>
                 </button>
                 <ul id="tpa-submenu" class="mt-2 ml-8 space-y-1 hidden">
                     <li><a href="/siswa/tpa/informasi" @click="openSidebar = false"
@@ -68,10 +72,11 @@
                 <button onclick="toggleSubmenu('daftarulang-submenu')"
                     class="flex items-center justify-between w-full text-gray-700 font-medium hover:text-blue-600 hover:bg-gray-100 rounded px-2 py-1">
                     <div class="flex items-center">
-                        <i class="fas fa-undo-alt w-5 ms-3"></i>
+                        <i class="fas fa-undo-alt w-5"></i>
                         <span x-show="!isSidebarCollapsed" class="ms-3">Daftar Ulang</span>
                     </div>
-                    <i class="fas fa-chevron-down transition-transform duration-300" id="icon-daftarulang-submenu"></i>
+                    <i x-show="!isSidebarCollapsed" class="fas fa-chevron-down transition-transform duration-300"
+                        id="icon-daftarulang-submenu"></i>
                 </button>
                 <ul id="daftarulang-submenu" class="mt-2 ml-8 space-y-1 hidden">
                     <li><a href="/siswa/daftar-ulang" @click="openSidebar = false"
