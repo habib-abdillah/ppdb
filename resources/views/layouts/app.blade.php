@@ -33,8 +33,9 @@
         }
     </style>
 </head>
+{{-- transition-all duration-300 relative bg-gray-100 overflow-x-hidden --}}
 
-<body class="transition-all duration-300 relative bg-gray-100 overflow-x-hidden" :class="isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'">
+<body class="relative bg-gray-100" :class="isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'">
     <div x-data="sidebarHandler()" x-init="init()" @resize.window="checkScreen()"
         class="flex h-screen overflow-hidden relative">
         <!-- Overlay Mobile -->
@@ -53,9 +54,9 @@
         @endif
 
         <!-- Konten Utama -->
-        <div class="flex-1 flex flex-col transition-all duration-300">
+        <div class="flex-1 flex flex-col transition-all duration-300 z-0">
             <!-- Header mobile -->
-            @include('layouts.partials.header') 
+            @include('layouts.partials.header')
             <!-- Konten -->
             <main class="flex-1 overflow-y-auto">
                 <div class="p-4">
