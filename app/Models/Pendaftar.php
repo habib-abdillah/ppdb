@@ -9,7 +9,7 @@ class Pendaftar extends Model
 {
     use HasFactory;
 
-    protected $table = 'pendaftar'; // pastikan nama tabel tetap cocok
+    protected $table = 'pendaftars'; // pastikan nama tabel tetap cocok
 
     protected $fillable = [
         'user_id',
@@ -26,5 +26,15 @@ class Pendaftar extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class);
+    }
+
+    public function rekomendasi()
+    {
+        return $this->hasOne(Rekomendasi::class);
     }
 }
