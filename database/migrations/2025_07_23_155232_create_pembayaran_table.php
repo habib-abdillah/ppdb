@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('bukti')->nullable(); // path bukti transfer
             $table->enum('status', ['belum', 'pending', 'diverifikasi', 'ditolak'])->default('belum');
             $table->text('catatan')->nullable();
+            $table->timestamp('tanggal_dibayar')->nullable();
             $table->timestamps();
         });
     }

@@ -9,29 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
-    <style>
-        .section-card {
-            transition: all 0.3s ease;
-        }
-
-        .section-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-    </style>
 </head>
 {{-- transition-all duration-300 relative bg-gray-100 overflow-x-hidden --}}
 
@@ -65,16 +42,6 @@
             </main>
         </div>
     </div>
-
-    <script>
-        function toggleSubmenu(id) {
-            const submenu = document.getElementById(id);
-            const icon = document.getElementById("icon-" + id);
-            submenu.classList.toggle("hidden");
-            icon.classList.toggle("rotate-180");
-        }
-    </script>
-
 </body>
 
 </html>
