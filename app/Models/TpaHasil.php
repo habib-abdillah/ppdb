@@ -5,21 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pembayaran extends Model
+class TpaHasil extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembayaran';
+    protected $table = 'tpa_hasil';
 
     protected $fillable = [
         'pendaftar_id',
-        'jenis',
-        'metode',
-        'jumlah',
-        'bukti',
-        'status',
+        'nilai',
+        'rekomendasi_jurusan',
         'catatan',
-        'tanggal_dibayar',
     ];
 
     public function pendaftar()

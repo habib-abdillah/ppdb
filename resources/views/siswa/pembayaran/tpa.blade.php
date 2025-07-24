@@ -3,32 +3,61 @@
 @section('title', 'Upload Pembayaran TPA')
 
 @section('content')
-    <!-- Main Container -->
-    <div class="flex h-screen">
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
-                <div class="max-w-4xl mx-auto">
-                    <!-- Information Card -->
-                    <div class="bg-white rounded-lg shadow-md p-6 mb-6 border-l-4 border-primary">
-                        <div class="flex items-start">
-                            <div class="bg-blue-100 p-2 rounded-full mr-4">
-                                <i class="fas fa-info-circle text-blue-500 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Informasi Penting</h3>
-                                <p class="text-gray-600">
-                                    Harap upload bukti pembayaran Tes Potensi Akademik dalam format JPG, PNG, atau PDF
-                                    dengan ukuran maksimal 2MB.
-                                    Pastikan foto/tanda bukti pembayaran terlihat jelas.
-                                </p>
-                            </div>
+    <!-- Content -->
+    <div class="flex">
+        <main class="flex-1 p-4">
+            <!-- Information Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6 border-l-4 border-primary">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-full mr-4">
+                            <i class="fas fa-info-circle text-blue-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Informasi Penting</h3>
+                            <p class="text-gray-600">
+                                Harap upload bukti pembayaran Tes Potensi Akademik dalam format JPG, PNG, atau PDF
+                                dengan ukuran maksimal 2MB.
+                                Pastikan foto/tanda bukti pembayaran terlihat jelas.
+                            </p>
                         </div>
                     </div>
+                    @if ($pembayaran && $pembayaran->bukti)
+                        <div class="mt-4 md:mt-0 md:ml-4 shrink-0">
+                            <button type="button" onclick="lihatBukti('{{ asset('storage/' . $pembayaran->bukti) }}')"
+                                class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 w-full md:w-auto">
+                                Lihat Bukti Pembayaran
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            </div>
 
+            <div x-data="{ showForm: {{ $pembayaran ? 'false' : 'true' }} }" x-ref="uploadFormContainer">
+                {{-- Jika sudah pernah upload --}}
+                @if ($pembayaran)
+                    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                        <h3 class="text-lg font-semibold mb-2 text-gray-800">Bukti Sudah Diupload</h3>
+
+                        <p class="text-sm text-gray-600 mb-2">Status:
+                            <span class="font-semibold text-yellow-600">{{ ucfirst($pembayaran->status) }}</span>
+                        </p>
+
+                        <div>
+                            <button x-on:click="showForm ? showForm = false : konfirmasiUploadUlang($event)"
+                                class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <span x-text="showForm ? 'Sembunyikan Form' : 'Upload Ulang'"></span>
+                            </button>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Form Upload / Upload Ulang --}}
+                <div x-show="showForm" x-cloak>
                     <!-- Upload Section -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <form data-turbo="false" action="{{ route('siswa.pembayaran.tpa.store') }}" method="POST"
+                        enctype="multipart/form-data" class="bg-white rounded-lg shadow-md overflow-hidden">
+                        @csrf
                         <div class="p-6 border-b border-gray-200">
                             <h2 class="text-xl font-semibold text-gray-800">Form Upload Bukti Pembayaran</h2>
                         </div>
@@ -55,7 +84,7 @@
                                     <label class="block text-gray-700 text-sm font-medium mb-2" for="bank-tujuan">
                                         Bank Tujuan
                                     </label>
-                                    <select id="bank-tujuan"
+                                    <select name="bank_tujuan" id="bank-tujuan"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                         <option value="">Pilih Bank</option>
                                         <option value="bca">BCA</option>
@@ -70,7 +99,7 @@
                                     </label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-2 text-gray-500">Rp</span>
-                                        <input type="text" id="nominal"
+                                        <input type="text" name="nominal" id="nominal"
                                             class="w-full px-8 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                             placeholder="250.000">
                                     </div>
@@ -89,9 +118,10 @@
                                         <h4 class="font-medium text-lg text-gray-700 mb-1">Klik untuk upload atau tarik file
                                             ke sini</h4>
                                         <p class="text-sm text-gray-500 mb-3">Format: JPG, PNG, PDF (Maks. 2MB)</p>
-                                        <input type="file" id="file-upload" class="hidden" accept="image/*,.pdf">
-                                        <button
-                                            class="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition duration-300">
+                                        <input type="file" name="bukti" id="file-upload" class="hidden"
+                                            accept="image/*,.pdf">
+                                        <button type="button" id="pick-file-btn"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                             Pilih File
                                         </button>
                                     </div>
@@ -111,56 +141,118 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end">
-                                <button id="submit-btn"
-                                    class="bg-primary text-white px-6 py-2 rounded-md hover:bg-secondary transition duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                <button id="submit-btn" type="submit"
+                                    class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                                     disabled>
                                     <i class="fas fa-paper-plane mr-2"></i> Kirim
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
+            </div>
 
-                    <!-- Bank Accounts -->
-                    <div class="bg-white rounded-lg shadow-md mt-6 p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Rekening Pembayaran</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
-                                <div class="flex items-center mb-3">
-                                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f2551823-a3f7-45c1-91f4-696ca6baf852.png"
-                                        alt="Logo Bank BCA berwarna biru dengan ikon segitiga"
-                                        class="h-8 w-8 object-contain mr-2">
-                                    <h3 class="font-medium">BCA</h3>
-                                </div>
-                                <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
-                                <p class="font-semibold text-gray-800 mt-2">1234567890</p>
-                            </div>
-                            <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
-                                <div class="flex items-center mb-3">
-                                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/79c6b64f-0c4f-4267-bd51-adc00bb54e2a.png"
-                                        alt="Logo Bank BNI berwarna hijau dengan ikon bintang"
-                                        class="h-8 w-8 object-contain mr-2">
-                                    <h3 class="font-medium">BNI</h3>
-                                </div>
-                                <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
-                                <p class="font-semibold text-gray-800 mt-2">9876543210</p>
-                            </div>
-                            <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
-                                <div class="flex items-center mb-3">
-                                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cc63b618-2dd4-452d-8489-efc5b7b8a0d5.png"
-                                        alt="Logo Bank Mandiri berwarna merah dengan ikon superblok"
-                                        class="h-8 w-8 object-contain mr-2">
-                                    <h3 class="font-medium">Mandiri</h3>
-                                </div>
-                                <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
-                                <p class="font-semibold text-gray-800 mt-2">5678901234</p>
-                            </div>
+            <!-- Bank Accounts -->
+            <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Rekening Pembayaran</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f2551823-a3f7-45c1-91f4-696ca6baf852.png"
+                                alt="Logo Bank BCA berwarna biru dengan ikon segitiga"
+                                class="h-8 w-8 object-contain mr-2">
+                            <h3 class="font-medium">BCA</h3>
                         </div>
+                        <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
+                        <p class="font-semibold text-gray-800 mt-2">1234567890</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/79c6b64f-0c4f-4267-bd51-adc00bb54e2a.png"
+                                alt="Logo Bank BNI berwarna hijau dengan ikon bintang"
+                                class="h-8 w-8 object-contain mr-2">
+                            <h3 class="font-medium">BNI</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
+                        <p class="font-semibold text-gray-800 mt-2">9876543210</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cc63b618-2dd4-452d-8489-efc5b7b8a0d5.png"
+                                alt="Logo Bank Mandiri berwarna merah dengan ikon superblok"
+                                class="h-8 w-8 object-contain mr-2">
+                            <h3 class="font-medium">Mandiri</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">A/N: Universitas Pendidikan Indonesia</p>
+                        <p class="font-semibold text-gray-800 mt-2">5678901234</p>
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
-    {{-- <script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            console.log('✅ Alpine aktif');
+        });
+    </script>
+    <script>
+        function lihatBukti(fileUrl) {
+            const isPdf = fileUrl.endsWith('.pdf');
+
+            Swal.fire({
+                title: 'Bukti Pembayaran',
+                html: isPdf ?
+                    `<iframe src="${fileUrl}" width="100%" height="500px" style="border:none;"></iframe>` :
+                    `<img src="${fileUrl}" alt="Bukti Pembayaran" class="w-full rounded" />`,
+                width: '90%', // lebih fleksibel di mobile
+                customClass: {
+                    title: 'text-lg md:text-xl font-semibold',
+                },
+                showCloseButton: true,
+                showConfirmButton: false,
+            });
+        }
+
+        function konfirmasiUploadUlang(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Upload Ulang?',
+                text: "Data bukti pembayaran sebelumnya akan digantikan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const el = document.querySelector('[x-ref="uploadFormContainer"]');
+                    if (el) {
+                        try {
+                            Alpine.store('upload')?.setVisible?.(); // jika pakai Alpine store
+                            Alpine.$data(el).showForm = true;
+                        } catch (error) {
+                            console.error('Gagal akses Alpine:', error);
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Upload Bukti Berhasil!',
+                    text: @json(session('success')),
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // File Upload Handling
             const uploadArea = document.getElementById('upload-area');
@@ -169,6 +261,7 @@
             const fileName = document.getElementById('file-name');
             const removeFile = document.getElementById('remove-file');
             const submitBtn = document.getElementById('submit-btn');
+            const form = document.querySelector('form');
 
             // Click upload area to trigger file input
             uploadArea.addEventListener('click', function() {
@@ -183,7 +276,11 @@
 
                     // Check file size
                     if (fileSize > 2) {
-                        alert('Ukuran file terlalu besar. Maksimal 2MB');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Upload Gagal',
+                            text: 'Ukuran file terlalu besar. Maksimal 2MB',
+                        });
                         return;
                     }
 
@@ -196,7 +293,6 @@
 
                     // Show file info
                     fileName.textContent = file.name;
-                    document.getElementById('success-filename').textContent = file.name;
                     fileInfo.classList.remove('hidden');
                     uploadArea.classList.add('hidden');
 
@@ -229,23 +325,6 @@
                     submitBtn.disabled = true;
                 }
             }
-
-            // Submit button click
-            submitBtn.addEventListener('click', function() {
-                // Simulate form submission
-                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
-                this.disabled = true;
-
-                setTimeout(() => {
-                    // Show success section
-                    document.getElementById('success-section').classList.remove('hidden');
-                    this.innerHTML = '<i class="fas fa-check mr-2"></i> Berhasil';
-                    // Scroll to success section
-                    document.getElementById('success-section').scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }, 3000);
-            });
 
             // Drag and drop functionality
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -283,36 +362,5 @@
                 fileUpload.dispatchEvent(event);
             }
         });
-    </script> --}}
-
-    @if (session('success'))
-        <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    {{-- <form action="{{ route('siswa.pembayaran.tpa.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="mb-4">
-            <label for="bukti" class="block font-semibold mb-1">Upload Bukti Pembayaran TPA:</label>
-            <input type="file" name="bukti" id="bukti" required>
-            @error('bukti')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-            Kirim
-        </button>
-    </form> --}}
-
-    @if ($pembayaran)
-        <div class="mt-4">
-            <p>Status: <strong>{{ ucfirst($pembayaran->status) }}</strong></p>
-            <p>Catatan: {{ $pembayaran->catatan ?? '-' }}</p>
-            <img src="{{ asset('storage/' . $pembayaran->bukti) }}" alt="Bukti Pembayaran" class="w-40 mt-2 border rounded">
-        </div>
-    @endif
-
+    </script>
 @endsection

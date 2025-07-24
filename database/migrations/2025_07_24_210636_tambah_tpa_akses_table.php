@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tpa_hasil', function (Blueprint $table) {
+        Schema::create('tpa_akses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pendaftar_id')->constrained()->onDelete('cascade');
-            $table->integer('nilai')->nullable(); 
-            $table->string('rekomendasi_jurusan')->nullable();
-            $table->text('catatan')->nullable();
+            $table->string('username');
+            $table->string('password'); // plaintext khusus akses TPA (bukan login Laravel)
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tpa_hasil');
+        Schema::dropIfExists('tpa_akses');
     }
 };

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tpa_hasil', function (Blueprint $table) {
+        Schema::create('gelombang', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pendaftar_id')->constrained()->onDelete('cascade');
-            $table->integer('nilai')->nullable(); 
-            $table->string('rekomendasi_jurusan')->nullable();
-            $table->text('catatan')->nullable();
+            $table->string('nama'); // ex: Gelombang 1
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->date('tanggal_tpa')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tpa_hasil');
+        Schema::dropIfExists('gelombang');
     }
 };

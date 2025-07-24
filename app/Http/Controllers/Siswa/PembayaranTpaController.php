@@ -22,27 +22,27 @@ class PembayaranTpaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'metode' => 'required|string',
-            'jumlah' => 'required|numeric|min:1000',
-            'bukti'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bank_tujuan' => 'required|string',
+            'nominal'     => 'required|numeric|min:1000',
+            'bukti'       => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
-
 
         $pendaftar = Pendaftar::where('user_id', Auth::id())->first();
 
         $path = $request->file('bukti')->store('bukti_pembayaran', 'public');
 
-        // Cek apakah sudah pernah upload sebelumnya
-        $pembayaran = Pembayaran::updateOrCreate(
+        Pembayaran::updateOrCreate(
             ['pendaftar_id' => $pendaftar->id, 'jenis' => 'TPA'],
             [
+                'metode' => $request->bank_tujuan,
+                'jumlah' => $request->nominal,
                 'bukti' => $path,
-                'status' => 'pending', // default status
+                'status' => 'pending',
                 'catatan' => null,
                 'tanggal_dibayar' => now(),
             ]
         );
 
-        return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim.');
+        return redirect()->route('siswa.pembayaran.tpa')->with('success', 'Bukti pembayaran berhasil dikirim.');
     }
 }

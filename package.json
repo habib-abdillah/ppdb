@@ -9,10 +9,13 @@
         "queue": "php artisan queue:listen --tries=3"
     },
     "devDependencies": {
+        "@hotwired/turbo": "^8.0.4",
         "@tailwindcss/vite": "^4.1.11",
         "axios": "^1.8.2",
         "concurrently": "^9.2.0",
+        "laravel-echo": "^1.15.0",
         "laravel-vite-plugin": "^1.2.0",
+        "pusher-js": "^8.0.1",
         "vite": "^6.2.4"
     },
     "dependencies": {

@@ -175,9 +175,6 @@
                         </button>
                     </div>
                 </form>
-
-
-
                 <div class="mt-4">
                     <a href="{{ route('landing') }}"
                         class="w-full block text-center py-2 px-4 border border-gray-300 rounded-md text-lg font-semibold text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">

@@ -37,4 +37,19 @@ class Pendaftar extends Model
     {
         return $this->hasOne(Rekomendasi::class);
     }
+
+    public function gelombang()
+    {
+        return $this->belongsTo(Gelombang::class);
+    }
+
+    public function tpaHasil()
+    {
+        return $this->hasOne(TpaHasil::class);
+    }
+
+    public function tpaAkses()
+    {
+        return $this->hasOne(TpaAkses::class);
+    }
 }

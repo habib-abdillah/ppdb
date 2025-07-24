@@ -6,12 +6,12 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Pendaftar;
+use App\Models\TpaAkses;
 
 class PendaftarDummySeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Buat akun user
         $user = User::create([
             'name' => 'Ahmad Fulan',
             'email' => 'ahmad@example.com',
@@ -19,7 +19,6 @@ class PendaftarDummySeeder extends Seeder
             'role' => 'siswa',
         ]);
 
-        // 2. Simpan ke tabel pendaftars
         $pendaftar = Pendaftar::create([
             'user_id'       => $user->id,
             'nama_lengkap'  => 'Ahmad Fulan',
@@ -30,6 +29,13 @@ class PendaftarDummySeeder extends Seeder
             'no_hp_ortu'    => '089876543210',
             'nisn'          => '1234567890',
             'asal_sekolah'  => 'SMP Negeri 1 Bandung',
+            'gelombang_id'  => 1,
+        ]);
+
+        TpaAkses::create([
+            'pendaftar_id' => $pendaftar->id,
+            'username'     => $pendaftar->email,
+            'password'     => $pendaftar->no_hp_ortu,
         ]);
     }
 }

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\AkunPendaftaranMail;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\Gelombang;
+use App\Models\TpaAkses;
 
 class RegisterController extends Controller
 {
@@ -20,17 +21,18 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Simpan data pendaftar dan buat akun pengguna baru.
-     */
     public function store(Request $permintaan)
     {
         $email = $permintaan->email;
+        $now = now();
+        $gelombangAktif = Gelombang::whereDate('tanggal_mulai', '<=', $now)
+            ->whereDate('tanggal_selesai', '>=', $now)
+            ->first();
 
         if (User::where('email', $email)->exists()) {
             return redirect()->route('register')->withErrors(['email' => 'Email sudah terdaftar.'])->withInput();
         }
-        // Validasi data input dari form
+
         $permintaan->validate([
             'nama_lengkap'      => 'required|string|max:255',
             'tempat_lahir'      => 'required|string|max:255',
@@ -43,7 +45,6 @@ class RegisterController extends Controller
             'setuju_syarat'     => 'accepted',
         ]);
 
-        // Buat akun user baru
         $user = User::create([
             'name'     => $permintaan->nama_lengkap,
             'email'    => $permintaan->email,
@@ -52,7 +53,6 @@ class RegisterController extends Controller
         ]);
 
         try {
-            // Kirim email dengan informasi login
             Mail::to($permintaan->email)->queue(new AkunPendaftaranMail(
                 $permintaan->nama_lengkap,
                 $permintaan->email,
@@ -62,7 +62,6 @@ class RegisterController extends Controller
             Log::error("Gagal mengirim email ke {$permintaan->email}: " . $e->getMessage());
         }
 
-        // Simpan data ke tabel pendaftar
         Pendaftar::create([
             'user_id'       => $user->id,
             'nama_lengkap'  => $permintaan->nama_lengkap,
@@ -73,9 +72,15 @@ class RegisterController extends Controller
             'no_hp_ortu'    => $permintaan->no_hp_orang_tua,
             'nisn'          => $permintaan->nisn,
             'asal_sekolah'  => $permintaan->asal_sekolah,
+            'gelombang_id'  => $gelombangAktif?->id,
         ]);
 
-        // Redirect ke halaman login dengan pesan sukses
+        TpaAkses::create([
+            'pendaftar_id' => $permintaan->id,
+            'username'     => $permintaan->email,
+            'password'     => $permintaan->no_hp_orang_tua,
+        ]);
+
         return redirect()->route('register')->with('success', 'Pendaftaran berhasil! Silakan login menggunakan email dan nomor HP orang tua sebagai kata sandi.');
     }
 }

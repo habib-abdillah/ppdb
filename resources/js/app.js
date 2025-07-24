@@ -10,7 +10,7 @@ window.sidebarHandler = function () {
         openSidebar: window.innerWidth >= 768,
         isSidebarCollapsed: false,
         isHoveringSidebar: false,
-        isHoverTriggered: false, // <--- tambahan
+        isHoverTriggered: false,
 
         init() {
             this.checkScreen();
