@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\Siswa\PembayaranTpaController;
+use App\Http\Controllers\Siswa\PembayaranController;
 use App\Http\Controllers\Siswa\TpaController;
 
 // Landing Page (halaman awal sebelum login)
@@ -33,8 +33,10 @@ Route::middleware(['auth', 'role:panitia'])->group(function () {
 // Siswa
 Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/siswa', fn() => view('dashboard.siswa'));
-    Route::get('/siswa/pembayaran/tpa', [PembayaranTpaController::class, 'index'])->name('siswa.pembayaran.tpa');
-    Route::post('/siswa/pembayaran/tpa', [PembayaranTpaController::class, 'store'])->name('siswa.pembayaran.tpa.store');
+    Route::get('/siswa/pembayaran/tpa', [PembayaranController::class, 'index_tpa'])->name('siswa.pembayaran.tpa');
+    Route::post('/siswa/pembayaran/tpa', [PembayaranController::class, 'store_tpa'])->name('siswa.pembayaran.tpa.store');
     Route::get('/siswa/tpa/informasi', [TpaController::class, 'index'])->name('siswa.tpa.informasi');
     Route::get('/siswa/tpa/tracking', [TpaController::class, 'hasil'])->name('tpa.hasil');
+    Route::get('/siswa/pembayaran/daftar-ulang', [PembayaranController::class, 'index_du'])->name('siswa.pembayaran.du');
+    Route::post('/siswa/pembayaran/daftar-ulang', [PembayaranController::class, 'store_du'])->name('siswa.pembayaran.du.store');
 });
