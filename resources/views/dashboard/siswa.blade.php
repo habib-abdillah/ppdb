@@ -3,10 +3,6 @@
 @section('title', 'Dashboard Siswa')
 
 @section('content')
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button class="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
-    </form>
     <div class="flex">
         <main class="flex-1 p-4">
             <!-- Status Pendaftaran -->
