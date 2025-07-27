@@ -51,11 +51,20 @@
                             <input type="text" readonly value="{{ $tpaAkses->username ?? '-' }}"
                                 class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
                         </div>
-                        <div>
+                        <div x-data="{ show: false }" class="relative">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                            <input :type="show ? 'text' : 'password'" readonly value="{{ $tpaAkses->password ?? '-' }}"
+                                class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none pr-10">
+                            <button type="button" @click="show = !show"
+                                class="absolute right-2 top-9 text-gray-600 hover:text-gray-800">
+                                <span x-text="show ? '🙈' : '👁️'"></span>
+                            </button>
+                        </div>
+                        {{-- <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
                             <input type="password" readonly value="{{ $tpaAkses->password ?? '-' }}"
                                 class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
-                        </div>
+                        </div> --}}
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Gelombang:</label>
                             <input type="text" readonly value="{{ $pendaftar->gelombang->nama ?? '-' }}"

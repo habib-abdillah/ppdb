@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Siswa;
 
+use App\Models\TpaHasil;
+use App\Models\Gelombang;
+use App\Models\Pendaftar;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Pendaftar;
-use App\Models\Gelombang;
 
 class TpaController extends Controller
 {
@@ -22,5 +23,24 @@ class TpaController extends Controller
             'tpaAkses'        => $pendaftar->tpaAkses,
             'semuaGelombang'  => $semuaGelombang,
         ]);
+    }
+
+    public function hasil()
+    {
+        $user = auth()->user();
+
+        if (!$user->pendaftar) {
+            return redirect()->back()->with('error', 'Data pendaftar tidak ditemukan.');
+        }
+
+        $hasil = $user->pendaftar->tpaHasil;
+
+        if (!$hasil) {
+            return redirect()->back()->with('error', 'Data hasil TPA belum tersedia.');
+        }
+
+        $hasil->load('subtes.master');
+
+        return view('siswa.tpa.hasil', compact('hasil'));
     }
 }

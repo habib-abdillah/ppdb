@@ -36,4 +36,5 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/siswa/pembayaran/tpa', [PembayaranTpaController::class, 'index'])->name('siswa.pembayaran.tpa');
     Route::post('/siswa/pembayaran/tpa', [PembayaranTpaController::class, 'store'])->name('siswa.pembayaran.tpa.store');
     Route::get('/siswa/tpa/informasi', [TpaController::class, 'index'])->name('siswa.tpa.informasi');
+    Route::get('/siswa/tpa/tracking', [TpaController::class, 'hasil'])->name('tpa.hasil');
 });

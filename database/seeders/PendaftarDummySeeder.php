@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Pendaftar;
 use App\Models\TpaAkses;
+use App\Models\TpaHasil;
+use App\Models\TpaSubtesMaster;
+use App\Models\TpaHasilSubtes;
 
 class PendaftarDummySeeder extends Seeder
 {
@@ -37,5 +40,51 @@ class PendaftarDummySeeder extends Seeder
             'username'     => $pendaftar->email,
             'password'     => $pendaftar->no_hp_ortu,
         ]);
+
+        $subtesList = [
+            ['kode' => 'LOGIKA', 'nama' => 'Logika Programming'],
+            ['kode' => 'KREATIVITAS', 'nama' => 'Kreativitas Visual'],
+            ['kode' => 'PEMECAHAN', 'nama' => 'Pemecahan Masalah'],
+            ['kode' => 'ESTETIKA', 'nama' => 'Estetika Desain'],
+        ];
+
+        foreach ($subtesList as $subtes) {
+            TpaSubtesMaster::firstOrCreate(
+                ['kode' => $subtes['kode']],
+                ['nama' => $subtes['nama']]
+            );
+        }
+
+        $hasil = TpaHasil::create([
+            'pendaftar_id'        => $pendaftar->id,
+            'nilai'               => 320,
+            'persentil'           => 85,
+            'rekomendasi_jurusan' => 'PPLG',
+            'kesesuaian_pplg'     => 85,
+            'kesesuaian_dkv'      => 65,
+            'catatan'             => 'Direkomendasikan ke jurusan PPLG karena skor logika sangat tinggi.',
+            'status'              => 'selesai',
+            'tanggal_tes'         => now()->subDays(5),
+        ]);
+
+        // Masukkan nilai per subtes
+        $nilaiSubtes = [
+            'LOGIKA'       => ['nilai' => 92, 'kategori' => 'Sangat Baik', 'keterangan' => 'Kemampuan utama untuk PPLG'],
+            'KREATIVITAS'  => ['nilai' => 78, 'kategori' => 'Baik', 'keterangan' => 'Potensi untuk DKV'],
+            'PEMECAHAN'    => ['nilai' => 85, 'kategori' => 'Sangat Baik', 'keterangan' => 'Kuat di kedua bidang'],
+            'ESTETIKA'     => ['nilai' => 65, 'kategori' => 'Cukup', 'keterangan' => 'Perlu pengembangan untuk DKV'],
+        ];
+
+        foreach ($nilaiSubtes as $kode => $detail) {
+            $master = TpaSubtesMaster::where('kode', $kode)->first();
+
+            TpaHasilSubtes::create([
+                'tpa_hasil_id'          => $hasil->id,
+                'tpa_subtes_master_id'  => $master->id,
+                'nilai'                 => $detail['nilai'],
+                'kategori'              => $detail['kategori'],
+                'keterangan'            => $detail['keterangan'],
+            ]);
+        }
     }
 }

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tpa_hasil', function (Blueprint $table) {
+        Schema::create('tpa_subtes_master', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pendaftar_id')->constrained()->onDelete('cascade');
-            $table->integer('nilai')->nullable(); 
-            $table->string('rekomendasi_jurusan')->nullable();
-            $table->text('catatan')->nullable();
+            $table->string('nama');
+            $table->string('kode')->unique();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tpa_hasil');
+        Schema::dropIfExists('tpa_subtes_master');
     }
 };
